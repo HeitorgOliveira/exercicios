@@ -40,6 +40,6 @@ int main(void)
             printf("%c", resposta[j]);
         }
         printf("\n");
-        resposta = "";
+        resposta = "...";
     }
 }
