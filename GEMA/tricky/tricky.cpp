@@ -16,11 +16,11 @@ int main()
         for (int k = 0; k < n; k++)
         {
             if (a[k] >= 'a' && a[k] <= 'z')
-                if ((a[k] == c[k] && a[k] != b[k]) || (b[k] == c[k] && b[k] != a[k]))
+                if (a[k] != c[k] && b[k] != c[k])
                     passou[i] = false;
-            else if (a[k] >= 'A' && a[k] <= 'Z')
+        /*    else if (a[k] >= 'A' && a[k] <= 'Z')
                 if (a[k] != c[k])
-                    passou[i] = false;
+                    passou[i] = false;*/
         }
     }
     for (int i = 0; i < t; i++)
