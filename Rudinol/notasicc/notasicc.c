@@ -8,8 +8,13 @@
         scanf("%i %i", &alunos, &notas);
 
         float sala[alunos][notas];
-        float medias[alunos];
+        float medias[alunos], medias2[notas];
         float aux;
+
+        for (int i = 0; i < notas; i++)
+        {
+            medias2[i] = 0;
+        }
         for (int i  = 0; i < alunos; i++)
         {
             aux = 0;
@@ -17,15 +22,20 @@
             {
                 scanf("%f", &sala[i][j]);
                 aux += sala[i][j];
+                medias2[j] += sala[i][j];
             }
             medias[i] = aux/notas;
-            medias[i] > 5 ? printf("Media do aluno %i = %.2f : Aprovado\n", i+1, medias[i]) : printf("Media do aluno %i = %.2f : Reprovado\n", i+1, medias[i]);
+            medias[i] >= 5 ? printf("Media do aluno %i = %.2f : Aprovado\n", i+1, medias[i]) : printf("Media do aluno %i = %.2f : Reprovado\n", i+1, medias[i]);
         }
-        sort(medias, alunos);
+        for (int i = 0; i < notas; i++)
+        {
+            medias2[i] /= alunos;
+        }
+        sort(medias2, notas);
         printf("\n");
         for (int i = 0; i < notas; i++)
         {
-            printf("%.2f ", medias[i]);
+            printf("%.2f ", medias2[i]);
         }
     }
 
