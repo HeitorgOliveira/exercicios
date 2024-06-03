@@ -10,6 +10,8 @@ typedef struct
 } Product;
 
 Product *allocate_products(int cases);
+void free_products(Product* products, int cases);
+void sort(Product *products, int cases);
 
 int main(void)
 {
@@ -18,14 +20,17 @@ int main(void)
     if (cases == 0)
     {
         printf("Sem produtos a serem cadastrados\n");
+        return -1;
     }
     Product *products;
     products = allocate_products(cases);
     if (products == NULL) return -1;
+    sort(products, cases);
     for (int i  = 0; i < cases; i++)
     {
-        printf("IP: %i\nCODE: %i\nCODIGO: %s\n", products[i].ip, products[i].code, products[i].content);
+        printf("%s %i\n", products[i].content, products[i].code);
     }
+    free_products(products, cases);
 }
 
 Product *allocate_products(int cases)
@@ -35,8 +40,48 @@ Product *allocate_products(int cases)
     for(int i = 0; i < cases; i++)
     {
         products[i].content = (char*) malloc(sizeof(char) * 200);
-        if (products[i].content == NULL) return NULL;
-        scanf("%i %i %s", &products[i].ip, &products[i].code, products[i].content);
+        if (products[i].content == NULL)
+        {
+            for(int j = 0; j < i; j++)
+            {
+                free(products[j].content);
+            }
+            free(products);
+            return NULL;
+        }
+        scanf("%i %i", &products[i].ip, &products[i].code);
+        getchar();
+        fgets(products[i].content, 200, stdin);
+        size_t len = strlen(products[i].content);
+        if (len > 0 && products[i].content[len - 1] == '\n') {
+            products[i].content[len - 1] = '\0';
+        }
     }
     return products;
+}
+
+void sort(Product *products, int cases)
+{
+    Product aux;
+    for (int i = 0; i < cases - 1; i++)
+    {
+        for (int j = i + 1; j < cases; j++)
+        {
+            if (products[i].ip < products[j].ip)
+            {
+                aux = products[i];
+                products[i] = products[j];
+                products[j] = aux;
+            }
+        }
+    }
+}
+
+void free_products(Product* products, int cases)
+{
+    for (int i = 0; i < cases; i++)
+    {
+        free(products[i].content);
+    }
+    free(products);
 }
