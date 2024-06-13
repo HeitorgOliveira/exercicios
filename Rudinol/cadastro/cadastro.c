@@ -2,34 +2,82 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MAX_ENTRADA 200
-
 typedef struct{
-    char *nome, cpf;
+    char *nome;
+    char *cpf;
     int idade;
-    float dinheiro, credito, divida;
+    float dinheiro;
+    float credito;
+    float divida;
 } Pessoa;
 
-void validar(Pessoa *pessoa, char *entrada);
+void exibedados(Pessoa *pessoas, int size);
+void freearray(Pessoa *pessoas, int size);
 
 int main(void)
 {
-    int n;
+    int n, dividas=0;
     scanf("%i", &n);
     Pessoa *pessoas;
     pessoas = malloc(sizeof(Pessoa) * n);
-    char entrada[MAX_ENTRADA];
+    if (pessoas == NULL)
+    {
+        printf("Erro ao alocar ponteiro\n");
+        exit(1);
+    }
     for(int i = 0; i < n; i++)
     {
-        if(fgets(entrada, sizeof(char), stdin) != NULL)
+        pessoas[i].nome = malloc(sizeof(char) * 100);
+        pessoas[i].cpf = malloc(sizeof(char) * 12);
+        if (pessoas[i].nome ==NULL || pessoas[i].cpf == NULL) 
         {
-            validar(&pessoas[i], entrada);
+            printf("Erro ao alocar ponteiro\n");
+            exit(1);
         }
+        scanf(" %99[^,] , %11[^,] , %i , %f , %f", pessoas[i].nome, pessoas[i].cpf, &pessoas[i].idade, &pessoas[i].dinheiro, &pessoas[i].credito);
+        "%f", pessoas[i].divida = pessoas[i].dinheiro - pessoas[i].credito;
+        setbuf(stdin, NULL);
     }
+    exibedados(pessoas, n);
+    freearray(pessoas, n);
 }
 
-void validar(Pessoa *pessoa, char *entrada)
+
+void exibedados(Pessoa *pessoas, int size)
 {
-    char * token;
-    token = strtok(entrada, ", ");
+    Pessoa endividados[size];
+    int cont=0;
+    for(int i = 0; i < size; i++)
+    {
+        if(pessoas[i].divida < 0)
+        {
+            endividados[cont] = pessoas[i];
+            cont++;
+        }
+        printf("Dados da pessoa %i:\nNome: %s\nCPF: %s\nIdade: %i\nSaldo: %.2f\nCredito: %.2f\n\n", i+1 , pessoas[i].nome, pessoas[i].cpf, pessoas[i].idade, pessoas[i].dinheiro, pessoas[i].credito);
+    }
+    if (cont)
+    {
+        printf("Pessoas endividadas:\n");
+        for(int i =0 ; i < cont; i++)
+        {
+            if (i == cont-1)
+                printf("Nome: %s\nCPF: %s\nDivida: %.2f", endividados[i].nome, endividados[i].cpf, endividados[i].divida * -1);
+            else
+                printf("Nome: %s\nCPF: %s\nDivida: %.2f\n\n", endividados[i].nome, endividados[i].cpf, endividados[i].divida * -1);
+        }
+    }
+    else
+        printf("Pessoas endividadas:\nNenhuma pessoa endividada encontrada.\n");
+    return;
+}
+
+void freearray(Pessoa *pessoas, int size)
+{
+    for(int i = 0; i < size; i++)
+    {
+        free(pessoas[i].nome);
+        free(pessoas[i].cpf);
+    }
+    free(pessoas);
 }
